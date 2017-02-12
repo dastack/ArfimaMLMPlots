@@ -30,7 +30,8 @@ ArfimaMLM.plot<- function(Model, CoefName, TimeVar,
   if (missing(title)) {
     ArfimaPlot<- ArfimaPlot
   } else ArfimaPlot<- ArfimaPlot + 
-    labs(title = title)
+    ggtitle(title) +
+    theme(plot.title = element_text(hjust = 0.5))
   if (missing(loess)){
     ArfimaPlot<- ArfimaPlot
   } else if (loess == TRUE) {

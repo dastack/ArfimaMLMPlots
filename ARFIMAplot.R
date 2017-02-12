@@ -9,7 +9,8 @@ Mod1<- arfimaMLM(majpu.ydif~ minpu.xdif + policyvote + longsession + session1 +
 
 
 ArfimaMLM.plot<- function(Model, CoefName, TimeVar, 
-                          loess = NULL, title = NULL) {
+                          loess = NULL, title = NULL,
+                          xaxis = NULL, yaxis = NULL) {
   #  Mod<- deparse(substitute(Model))
   Model1<- Model$result
   require(lme4)
@@ -39,10 +40,22 @@ ArfimaMLM.plot<- function(Model, CoefName, TimeVar,
   } else if (loess == FALSE) {
     ArfimaPlot<- ArfimaPlot
   }
+  if (missing(xaxis)) {
+    ArfimaPlot<- ArfimaPlot
+  } else ArfimaPlot<- ArfimaPlot + 
+      xlab(xaxis)
+  if (missing(yaxis)) {
+    ArfimaPlot <- ArfimaPlot
+  } else ArfimaPlot <- ArfimaPlot +
+    ylab(yaxis)
+  
   return(ArfimaPlot)
 }
 
 
-testfun<- ArfimaMLM.plot(Mod1, "minpu.xdif", year, loess = TRUE, title = "Test Title")
+testfun<- ArfimaMLM.plot(Mod1, "minpu.xdif", year, loess = TRUE,
+                         title = "Party Unity through Time",
+                         xaxis = "Year", 
+                         yaxis = "Slope on Unity")
 
 print(testfun)

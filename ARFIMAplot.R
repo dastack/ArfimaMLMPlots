@@ -9,7 +9,7 @@ Mod1<- arfimaMLM(majpu.ydif~ minpu.xdif + policyvote + longsession + session1 +
 
 
 ArfimaMLM.plot<- function(Model, CoefName, TimeVar, 
-                          loess = NULL) {
+                          loess = NULL, title = NULL) {
   #  Mod<- deparse(substitute(Model))
   Model1<- Model$result
   require(lme4)
@@ -26,16 +26,23 @@ ArfimaMLM.plot<- function(Model, CoefName, TimeVar,
   ArfimaPlot<- ggplot(plot.frame, 
                       aes(x = Date, y = slope)) + 
     geom_line(aes())
+  if (missing(title)) {
+    ArfimaPlot<- ArfimaPlot
+  } else ArfimaPlot<- ArfimaPlot + 
+    labs(title = title)
   if (missing(loess)){
     ArfimaPlot<- ArfimaPlot
   } else if (loess == TRUE) {
 #    ArfimaPlot<- ArfimaPlot
     ArfimaPlot<- ArfimaPlot + geom_smooth(aes(),
                 method = "loess")
-  } 
+  } else if (loess == FALSE) {
+    ArfimaPlot<- ArfimaPlot
+  }
   return(ArfimaPlot)
 }
 
 
-testfun<- ArfimaMLM.plot(Mod1, "minpu.xdif", year, loess = TRUE)
+testfun<- ArfimaMLM.plot(Mod1, "minpu.xdif", year, loess = TRUE, title = "Test Title")
+
 print(testfun)

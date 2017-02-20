@@ -9,22 +9,27 @@
 #' @param title Character string to pass on to ggtitle.
 #' @param xaxis Character string to pass on to ggplot2.  Defaults to "Date" if left blank.  
 #' @param yaxis Character string to pass on to ggplot2.  Defaults to coefficient name if left blank.
+#' 
+#' @author David L Stack, \email{stackd85@gmail.com}
+#' 
 
 ArfimaMLM.plot<- function(Model, CoefName, TimeVar, 
                           loess = NULL, title = NULL,
                           xaxis = NULL, yaxis = NULL) {
-  #  Mod<- deparse(substitute(Model))
+  # Extract coefficients from ArfimaMLM object
   Model1<- Model$result
   require(lme4)
   ran.coef<- coef(Model1)
   ran.coef2<- data.frame(ran.coef[[1]])
   rm(ran.coef)
+  # Create dataframe of coefficients and dates to use in plot.
   slope<-  ran.coef2[,CoefName]
   Date<- as.character(row.names(ran.coef2))
   Date<- as.numeric(Date)
   plot.frame<- data.frame(Date, slope)
   # plot.frame<- ran.coef2 %>%
   #   select_(Date, Coefname)
+  #plot coefficients
   require(ggplot2)
   ArfimaPlot<- ggplot(plot.frame, 
                       aes(x = Date, y = slope)) + 
@@ -58,20 +63,25 @@ ArfimaMLM.plot<- function(Model, CoefName, TimeVar,
 
 ####Replication of Figure 4 from ARFIMA-MLM paper
 
-library(ArfimaMLM)
-load("full.house.replication.Rdata")
+# library(ArfimaMLM)
 
-Mod1<- arfimaMLM(majpu.ydif~ minpu.xdif + policyvote + longsession + session1 +
-                   minpu.fd + majn1s.fd + majn2s.fd+medmedn1.fd +
-                   medmedn2.fd + majsize.fd + (1 + minpu.xdif|year),
-                 data=full.house, timevar="year")
+#' @examples 
+#' 
+#' load("full.house.replication.Rdata")
+#' Mod1<- arfimaMLM(majpu.ydif~ minpu.xdif + policyvote + longsession + session1 +
+#'                    minpu.fd + majn1s.fd + majn2s.fd+medmedn1.fd +
+#'                    medmedn2.fd + majsize.fd + (1 + minpu.xdif|year),
+#'                  data=full.house, timevar="year")
 
 
 
 
-testplot<- ArfimaMLM.plot(Mod1, "minpu.xdif", year, loess = TRUE,
-                         title = "Varying Slope (Minority Party Unity)",
-                         xaxis = "Date", 
-                         yaxis = "Slope on Minority Party Unity")
+#' testplot<- ArfimaMLM.plot(Mod1, "minpu.xdif", year, loess = TRUE,
+#'                          title = "Varying Slope (Minority Party Unity)",
+#'                          xaxis = "Date", 
+#'                          yaxis = "Slope on Minority Party Unity")
 
-print(testplot)
+#' print(testplot)
+#' 
+#' @export
+#' 
